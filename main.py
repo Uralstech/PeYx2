@@ -16,6 +16,7 @@ class PeYx2:
 
     def __init__(self, filepath):
         self.filepath = filepath
+        self.startOpen = isfile(filepath)
 
         self.langHelper = LangConfigHelper()
         self.langData = self.langHelper.GetLangConfig(filepath)
@@ -35,6 +36,9 @@ class PeYx2:
         self.root.minsize(500, 500)
 
         self.initializeGraphics()
+        if self.startOpen:
+            self.openFile(filepath=self.filepath, override=True)
+            self.startOpen = False
 
         self.root.protocol('WM_DELETE_WINDOW', self.checkAndQuit)
         self.root.mainloop()
@@ -50,11 +54,12 @@ class PeYx2:
 
         self.initializeWindow()
 
-    def openFile(self, filepath=None):
-        num = self.checkSaveDialog('PeYx2: Open another file?', f'Opening another file will discard all changes.')
-        if num == -1 or num == 3: return None
+    def openFile(self, filepath=None, override=False):
+        if not override:
+            num = self.checkSaveDialog('PeYx2: Open another file?', f'Opening another file will discard all changes.')
+            if num == -1 or num == 3: return None
 
-        if filepath == None: filepath = askopenfilename(title="PeYx2: Open File", defaultextension='.txt', initialdir=getcwd(), filetypes=(("All Files", '*.*'), ("Text File (.txt)", '.txt'), ("Python Source File (.py)", '.py'), ("ezr Source File (.ezr)", '.ezr'), ("C Source File (.c)", '.c'), ("C++ Source File (.cpp)", '.cpp'), ("C/C++ Header File (.h)", '.h'), ("Java Source File (.java)", '.java')))
+        if filepath == None or not isfile(filepath): filepath = askopenfilename(title="PeYx2: Open File", defaultextension='.txt', initialdir=getcwd(), filetypes=(("All Files", '*.*'), ("Text File (.txt)", '.txt'), ("Python Source File (.py)", '.py'), ("ezr Source File (.ezr)", '.ezr'), ("C Source File (.c)", '.c'), ("C++ Source File (.cpp)", '.cpp'), ("C/C++ Header File (.h)", '.h'), ("Java Source File (.java)", '.java')))
         if isfile(filepath):
             self.filepath = filepath
 
@@ -90,7 +95,7 @@ class PeYx2:
         try:
             with open(self.filepath, 'w') as f:
                 f.write(self.textbox.get('0.0',END)[:-1])
-            self.openFile(self.filepath)
+            self.openFile(filepath=self.filepath)
             self.langData = self.langHelper.GetLangConfig(self.filepath)
         except Exception as error:
             showerror('PeYx2 File Writer', f'An unexpected error occured!\n\n{str(error)}')
@@ -275,7 +280,7 @@ class PeYx2:
 
         file = Menu(menu, tearoff=0)
         file.add_command(label='New', accelerator='Ctrl+N', command=self.newFile)
-        file.add_command(label='Open', accelerator='Ctrl+O', command=lambda:self.openFile())
+        file.add_command(label='Open', accelerator='Ctrl+O', command=lambda:self.openFile(filepath=self.filepath))
         file.add_command(label='Save', accelerator='Ctrl+S', command=lambda:self.saveFile())
         file.add_command(label='Save as...', accelerator='Ctrl+A+S', command=lambda:self.saveFile(saveas=True))
         file.add_separator()
@@ -315,7 +320,7 @@ class PeYx2:
         self.root.config(menu=menu)
 
         self.root.bind('<Control-n>', lambda _:self.newFile())
-        self.root.bind('<Control-o>', lambda _:self.openFile())
+        self.root.bind('<Control-o>', lambda _:self.openFile(filepath=self.filepath))
         self.root.bind('<Control-s>', lambda _:self.saveFile())
         self.root.bind('<Control-a>s', lambda _:self.saveFile(saveas=True))
 
