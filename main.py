@@ -267,7 +267,8 @@ class PeYx2:
         hScroll = Scrollbar(self.root, orient=HORIZONTAL)
         hScroll.pack(side=BOTTOM, fill='x', expand=1)
 
-        self.textbox = Text(self.root, width=10000, height=10000, bg=self.editorData.bg, fg=self.editorData.fg, insertbackground=self.editorData.fg, font=Font(family=self.editorData.font, size=self.editorData.size), xscrollcommand=hScroll.set, yscrollcommand=vScroll.set, wrap='none', undo=True)
+        font = Font(family=self.editorData.font, size=self.editorData.size)
+        self.textbox = Text(self.root, width=10000, height=10000, bg=self.editorData.bg, fg=self.editorData.fg, insertbackground=self.editorData.fg, font=font, xscrollcommand=hScroll.set, yscrollcommand=vScroll.set, tabs=font.measure('    '), wrap='none', undo=True)
         self.textbox.insert(END, self.tempText)
         self.textbox.tag_configure('highlight', foreground=self.editorData.h1)
         self.textbox.tag_configure('highlight2', foreground=self.editorData.h2)
@@ -280,7 +281,7 @@ class PeYx2:
 
         file = Menu(menu, tearoff=0)
         file.add_command(label='New', accelerator='Ctrl+N', command=self.newFile)
-        file.add_command(label='Open', accelerator='Ctrl+O', command=lambda:self.openFile(filepath=self.filepath))
+        file.add_command(label='Open', accelerator='Ctrl+O', command=lambda:self.openFile())
         file.add_command(label='Save', accelerator='Ctrl+S', command=lambda:self.saveFile())
         file.add_command(label='Save as...', accelerator='Ctrl+A+S', command=lambda:self.saveFile(saveas=True))
         file.add_separator()
@@ -320,7 +321,7 @@ class PeYx2:
         self.root.config(menu=menu)
 
         self.root.bind('<Control-n>', lambda _:self.newFile())
-        self.root.bind('<Control-o>', lambda _:self.openFile(filepath=self.filepath))
+        self.root.bind('<Control-o>', lambda _:self.openFile())
         self.root.bind('<Control-s>', lambda _:self.saveFile())
         self.root.bind('<Control-a>s', lambda _:self.saveFile(saveas=True))
 
