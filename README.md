@@ -15,8 +15,10 @@ Here are the shortcuts:
 - **Ctrl+a+s: Save-as file**
 - **Ctrl+z: Undo action**
 - **Ctrl+y: Redo action**
-- **F1: Open link to PeYx2 wiki**
+- **F1: Open link to PeYx2 wiki (coming soon)**
 - **F5: Run *\*any* file**
 
-All other instructions should be obvious in the UI. (hopefully)
+\* - any filetype with a corresponding .langConfig file
+
+All other instructions should be obvious in the UI
 ### NOTE: **This *should* work on MacOS and Linux, but I haven't tested it.**
