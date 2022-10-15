@@ -127,6 +127,8 @@ class PeYx2:
     def updateText(self):
         if self.oldText != self.textbox.get('0.0', END) and self.langData != None:
             text = self.textbox.get('0.0', END).split('\n')
+            for i in self.langData.syntaxes: self.textbox.tag_remove(i.name, '0.0', END)
+
             for i, v in enumerate(text):
                 for i2 in self.langData.syntaxes:
                     matches = i2.regex.finditer(v)
