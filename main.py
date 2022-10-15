@@ -71,7 +71,7 @@ class PeYx2:
                     self.textbox.delete('0.0', END)
                     self.textbox.insert('0.0', f.read())
                 self.langData = self.langHelper.GetLangConfig(self.filepath)
-                self.oldText = self.textbox.get('0.0', END) + '#'
+                self.oldText = ''
             except Exception as error:
                 showerror('PeYx2 File Opener', f'An unexpected error occured!\n\n{str(error)}')
 
@@ -126,18 +126,23 @@ class PeYx2:
 
     def updateText(self):
         if self.oldText != self.textbox.get('0.0', END) and self.langData != None:
-            text = self.textbox.get('0.0', END).split('\n')
-            for i in self.langData.syntaxes: self.textbox.tag_remove(i.name, '0.0', END)
+            oldText = self.oldText.split('\n')
+            self.oldText = self.textbox.get('0.0', END)
+            diff = [[i, v] for i, v in enumerate(self.textbox.get('0.0', END).split('\n')) if i >= len(oldText) or oldText[i] != v]
 
-            for i, v in enumerate(text):
+            for i in diff:
+                for i2 in self.langData.syntaxes: self.textbox.tag_remove(i2.name, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
+
                 for i2 in self.langData.syntaxes:
-                    matches = i2.regex.finditer(v)
+                    matches = i2.regex.finditer(i[1])
                     for i3 in matches:
                         self.textbox.tag_configure(i2.name, foreground=i2.color)
-                        self.textbox.tag_add(i2.name, f'{i+1}.{i3.start()}', f'{i+1}.{i3.end()}')
-        
-            self.oldText = self.textbox.get('0.0', END)
+                        self.textbox.tag_add(i2.name, f'{i[0]+1}.{i3.start()}', f'{i[0]+1}.{i3.end()}')
         self.root.after(10, self.updateText)
+
+    def fullUpdate(self):
+        self.oldText = ''
+        self.root.after(5000, self.fullUpdate)
 
     def checkSave(self):
         data = None
@@ -275,6 +280,7 @@ class PeYx2:
         self.root.bind('<F1>', lambda _:openweb('https://github.com/uralstech/peyx2/wiki', new=2))
 
         self.updateText()
+        self.fullUpdate()
 
 def main():
     filepath = ''
