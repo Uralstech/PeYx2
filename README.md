@@ -3,7 +3,7 @@
 ## **What is PeYx2?**
 **PeYx2 (pronounced like pex) is a Text Editor made with Python.**
 It's a successor to [***PeYx***](https://github.com/Uralstech/PeYx). Here are some of it's new features:
-- **Code highlighting! *Now for \*any filetype!***
+- **Better code highlighting! *Now for \*any filetype!***
 - **Easily changeable fonts and colors!**
 - **Better looking graphics!**
 

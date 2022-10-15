@@ -1,0 +1,6 @@
+Thank you for installing PeYx2!
+
+Here's what changed in 1.2.0:
+- Full overhaul of the syntax highlighting system, using JSON configs and regex!
+- Added LICENSE and README to build (check under 'Help' menu)
+- Some bugfixes

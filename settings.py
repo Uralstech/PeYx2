@@ -9,7 +9,7 @@ class EditorSettingsHelper:
     __here = abspath(dirname(__file__))
 
     def GetEditorSettings(self):
-        data = EditorData('Consolas', 20, '#8aebff', '#1b1b1b', '#a80adc', '#00c161')
+        data = EditorData('Consolas', 20, '#8aebff', '#1b1b1b')
 
         filepath = abspath(join(EditorSettingsHelper.__here, 'PeYx2.PeYx2Config'))
         try:
@@ -19,11 +19,9 @@ class EditorSettingsHelper:
                     data.size = int(f.readline().rstrip('\n'))
                     data.fg = f.readline().rstrip('\n')
                     data.bg = f.readline().rstrip('\n')
-                    data.h1 = f.readline().rstrip('\n')
-                    data.h2 = f.readline().rstrip('\n')
         except Exception as error:
             showerror('PeYx2 Settings Retriever', f'An unexpected error occured!\n\n{str(error)}')
-            return EditorData('Consolas', 20, '#8aebff', '#1b1b1b', '#a80adc', '#00c161')
+            return EditorData('Consolas', 20, '#8aebff', '#1b1b1b')#, '#a80adc', '#00c161'
         
         return data
 
@@ -32,7 +30,7 @@ class EditorSettingsHelper:
         root.withdraw()
 
         current = self.GetEditorSettings()
-        settingsInfo = EditorSettingsDialog(root, 'PeYx2 Settings Editor', current.font, str(current.size), current.fg, current.bg, current.h1, current.h2)
+        settingsInfo = EditorSettingsDialog(root, 'PeYx2 Settings Editor', current.font, str(current.size), current.fg, current.bg)
         root.destroy()
 
         if not settingsInfo.hasSubmitted: return None
@@ -48,7 +46,7 @@ class EditorSettingsHelper:
 
         try:
             with open(filepath, 'w') as f:
-                f.write('\n'.join((settingsInfo.font, str(settingsInfo.size), settingsInfo.fg, settingsInfo.bg, settingsInfo.h1, settingsInfo.h2)))
+                f.write('\n'.join((settingsInfo.font, str(settingsInfo.size), settingsInfo.fg, settingsInfo.bg)))
         except Exception as error:
             showerror('PeYx2 Settings Editor', f'An unexpected error occured!\n\n{str(error)}')
             settingsInfo.destroy()

@@ -71,7 +71,7 @@ class PeYx2:
                     self.textbox.delete('0.0', END)
                     self.textbox.insert('0.0', f.read())
                 self.langData = self.langHelper.GetLangConfig(self.filepath)
-                self.oldText = self.textbox.get('0.0', END)[:-1] + 'Ö¬╚{§'
+                self.oldText = self.textbox.get('0.0', END) + '#'
             except Exception as error:
                 showerror('PeYx2 File Opener', f'An unexpected error occured!\n\n{str(error)}')
 
@@ -125,70 +125,17 @@ class PeYx2:
         system(self.langData.command)
 
     def updateText(self):
-        if self.oldText != self.textbox.get('0.0', END)[:-1] and self.langData != None:
-            text = self.textbox.get('0.0', END)
-            for i, v in enumerate(text.split('\n'), 0):
-                wordSplit = v.split(' ')
-                start = 0
-                for v2 in wordSplit:
-                    splitWord = ''
-                    if ':' in v2 or '(' in v2 or '.' in v2:
-                        keys = '.():'
-                        for key in keys:
-                            if key in v2:
-                                if isinstance(splitWord, list):
-                                    for i2 in range(len(splitWord)):
-                                        if key in splitWord[i2]:
-                                            word = splitWord[i2].split(key)
-
-                                            index = 0
-                                            for _ in range(len(word)-1):
-                                                word.insert(index+1, key)
-                                                index += 2
-                                            
-                                            index = i2
-                                            del splitWord[i2]
-                                            for v3 in word:
-                                                splitWord.insert(index, v3)
-                                                index += 1
-                                else:
-                                    splitWord = v2.split(key)
-
-                                    index = 0
-                                    for i2 in range(len(splitWord)-1):
-                                        splitWord.insert(index+1, key)
-                                        index += 2
-
-                        for i2, v3 in enumerate(splitWord):
-                            classCheck = False
-                            for v4 in self.langData.imports:
-                                if v4.replace('___MODULE___', v3) in text:
-                                    classCheck = True
-                                    break
-
-                            if v3 in self.langData.keywords: splitWord[i2] += '#T0'
-                            elif v3 in self.langData.modules and classCheck: splitWord[i2] += '#T1'
-                    
-                    if splitWord == '':
-                        classCheck = False
-                        for v3 in self.langData.imports:
-                            if v3.replace('___MODULE___', v2) in text:
-                                classCheck = True
-
-                        if v2 in self.langData.keywords: self.textbox.replace(f'{i+1}.{start}', f'{i+1}.{start+len(v2)}', v2, 'highlight')
-                        elif v2 in self.langData.modules and classCheck: self.textbox.replace(f'{i+1}.{start}', f'{i+1}.{start+len(v2)}', v2, 'highlight2')
-                        else: self.textbox.replace(f'{i+1}.{start}', f'{i+1}.{start+len(v2)}', v2)
-                    else:
-                        length = 0
-                        for i2, v3 in enumerate(splitWord):
-                            if v3.endswith('#T0'): self.textbox.replace(f'{i+1}.{start+length}', f'{i+1}.{start+length+len(v3)-3}', v3[:-3], 'highlight'); length += len(v3) - 3
-                            elif v3.endswith('#T1'): self.textbox.replace(f'{i+1}.{start+length}', f'{i+1}.{start+length+len(v3)-3}', v3[:-3], 'highlight2'); length += len(v3) - 3
-                            else: self.textbox.replace(f'{i+1}.{start+length}', f'{i+1}.{start+length+len(v3)}', v3); length += len(v3)
-                    
-                    start += len(v2) + 1
-            
+        if self.oldText != self.textbox.get('0.0', END) and self.langData != None:
+            text = self.textbox.get('0.0', END).split('\n')
+            for i, v in enumerate(text):
+                for i2 in self.langData.syntaxes:
+                    matches = i2.regex.finditer(v)
+                    for i3 in matches:
+                        self.textbox.tag_configure(i2.name, foreground=i2.color)
+                        self.textbox.tag_add(i2.name, f'{i+1}.{i3.start()}', f'{i+1}.{i3.end()}')
+        
             self.oldText = self.textbox.get('0.0', END)
-        self.root.after(1000, self.updateText)
+        self.root.after(10, self.updateText)
 
     def checkSave(self):
         data = None
@@ -237,11 +184,6 @@ class PeYx2:
             self.tempText = self.textbox.get('0.0', END)[:-1]
             self.refreshWindow()
 
-    def changeLangConfigs(self):
-        self.langHelper.CreateLangConfig(self.root)
-        self.langData = self.langHelper.GetLangConfig(self.filepath)
-        self.textbox.get
-
     def copyText(self):
         self.textbox.clipboard_clear()
         if self.textbox.tag_ranges(SEL): self.textbox.clipboard_append(self.textbox.get(SEL_FIRST, SEL_LAST))
@@ -270,8 +212,6 @@ class PeYx2:
         font = Font(family=self.editorData.font, size=self.editorData.size)
         self.textbox = Text(self.root, width=10000, height=10000, bg=self.editorData.bg, fg=self.editorData.fg, insertbackground=self.editorData.fg, font=font, xscrollcommand=hScroll.set, yscrollcommand=vScroll.set, tabs=font.measure('    '), wrap='none', undo=True)
         self.textbox.insert(END, self.tempText)
-        self.textbox.tag_configure('highlight', foreground=self.editorData.h1)
-        self.textbox.tag_configure('highlight2', foreground=self.editorData.h2)
         self.textbox.pack(fill='both', expand=1)
 
         hScroll.config(command=self.textbox.xview)
@@ -307,7 +247,6 @@ class PeYx2:
         ide = Menu(menu, tearoff=0)
         ide.add_command(label='Run file', accelerator='F5', command=self.runFile)
         ide.add_separator()
-        ide.add_command(label='Create langConfig', command=self.changeLangConfigs)
         ide.add_command(label='List all langConfigs', command=lambda:self.langHelper.ShowLangConfigs(self.root))
 
         menu.add_cascade(label='IDE', menu=ide)
@@ -315,6 +254,8 @@ class PeYx2:
         peyx2 = Menu(menu, tearoff=0)
         peyx2.add_cascade(label='PeYx2 wiki', command=lambda:openweb('https://github.com/uralstech/peyx2/wiki', new=2))
         peyx2.add_cascade(label='PeYx2 code', command=lambda:openweb('https://github.com/uralstech/peyx2', new=2))
+        peyx2.add_cascade(label='PeYx2 ReadMe', command=lambda:self.openFile(abspath(join(PeYx2.__here, 'README.md'))))
+        peyx2.add_cascade(label='PeYx2 License', command=lambda:self.openFile(abspath(join(PeYx2.__here, 'LICENSE'))))
 
         menu.add_cascade(label='Help', menu=peyx2)
 

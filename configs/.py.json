@@ -1,0 +1,37 @@
+{
+    "version":"1.0.0",
+    "command":"python ___FILE___",
+    "syntaxes":
+        [
+            {
+                "name":"keywords",
+                "regex":"\\b(class|from|pass|def|if|raise|del|import|return|as|elif|try|assert|else|is|while|async|except|with|await|finally|yield|break|for)\\b",
+                "color":"#a80adc"
+            },
+            {
+                "name":"keywords-light",
+                "regex":"\\b(False|or|None|continue|global|True|and|in|lambda|nonlocal|not)\\b",
+                "color":"#0080ff"
+            },
+            {
+                "name":"number",
+                "regex":"\\b[1234567890]*\\b",
+                "color":"#b9c0ff"
+            },
+            {
+                "name":"special-chars",
+                "regex":"(\\+|-|\\*|\\/|\\^|%|!|=|<|>)",
+                "color":"#8080ff"
+            },
+            {
+                "name":"comment",
+                "regex":"#.*",
+                "color":"#008000"
+            },
+            {
+                "name":"string",
+                "regex":"([\"'])((\\\\{2})*|(.*?[^\\\\](\\\\{2})*))\\1",
+                "color":"#ffa264"
+            }
+        ]
+}
