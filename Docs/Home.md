@@ -49,7 +49,9 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
     "version":"1.0.0",
 
     // Command to execute when 'Run' is called by user
-    "command":"",
+    // When run, PeYx2 replaces ___FILE___ with the path to the current open file and
+    // ___FOLDER___ with the path to the folder of the current open file
+    "command":"echo Current file: ___FILE___, current dir: ___FOLDER___",
 
     // Syntaxe classes, from least to most priority
     "syntaxes":
