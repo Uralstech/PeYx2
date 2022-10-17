@@ -1,4 +1,4 @@
-# PeYx Wiki
+# PeYx2 Wiki
 
 ## User's guide
 ### Toolbar
