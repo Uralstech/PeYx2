@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from re import Pattern
+from typing import Union
 
 @dataclass
 class LangSyntax:
@@ -7,9 +8,11 @@ class LangSyntax:
     regex: Pattern
     color: str
 
+    sub_syntaxes: Union[list, None]
+
 @dataclass
 class LangData:
-    syntaxes: list
+    syntaxes: list[LangSyntax]
     command: str
 
 @dataclass

@@ -21,7 +21,11 @@ class LangConfigHelper:
                 jsondata = load(f)
 
                 data.command = jsondata['command'].replace('___FILE___', abspath(filepath)).replace('___FOLDER___', abspath(dirname(filepath)))
-                for i in jsondata['syntaxes']: data.syntaxes.append(LangSyntax(i['name'], compile(i['regex']), i['color']))
+                for i in jsondata['syntaxes']:
+                    sub_syntaxes = None
+                    if 'sub-syntaxes' in i.keys(): sub_syntaxes = [LangSyntax(j['name'], compile(j['regex']), j['color'], None) for j in i['sub-syntaxes']]
+
+                    data.syntaxes.append(LangSyntax(i['name'], compile(i['regex']), i['color'], sub_syntaxes))
         except Exception as error:
             showerror('PeYx2 langConfig Retriever', f'An unexpected error occured!\n\n{str(error)}')
             return None

@@ -24,6 +24,11 @@
                 "color":"#8080ff"
             },
             {
+                "name":"functions",
+                "regex":"[a-zA-z_]+[0-9]*\\(.*?\\)",
+                "color":"#ffff80"
+            },
+            {
                 "name":"comment",
                 "regex":"@.*",
                 "color":"#008000"
@@ -31,7 +36,16 @@
             {
                 "name":"string",
                 "regex":"([\"'])((\\\\{2})*|(.*?[^\\\\](\\\\{2})*))\\1",
-                "color":"#ffa264"
+                "color":"#ffa264",
+
+                "sub-syntaxes":
+                [
+                    {
+                        "name":"string-escape",
+                        "regex":"(\\\\'|\\\\\"|\\\\t|\\\\n|\\\\r|\\\\{2})",
+                        "color":"#ff8000"
+                    }
+                ]
             }
         ]
 }

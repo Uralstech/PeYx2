@@ -78,7 +78,22 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
             {
                 "name":"string",
                 "regex":"([\"'])((\\\\{2})*|(.*?[^\\\\](\\\\{2})*))\\1",
-                "color":"#ffa264"
+                "color":"#ffa264",
+
+                // NEW for v1.3.0! Sub-syntaxes are applied to any of the main syntax classes!
+                // For example, when PeYx2 finds text in the above 'string' syntax category,
+                // it will check for the below sub-syntax 'string-escape' IN the 'string' text!
+                // If found, PeYx2 will apply the below color and tag to the text
+                "sub-syntaxes":
+                [
+                    {
+                        "name":"string-escape",
+                        "regex":"(\\\\'|\\\\\"|\\\\{2})",
+                        "color":"#ff8000"
+                    }
+
+                    // Note: There can be more than one sub-syntax category, even though only one is shown here
+                ]
             }
         ]
 }

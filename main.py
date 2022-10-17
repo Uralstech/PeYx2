@@ -131,13 +131,23 @@ class PeYx2:
             diff = [[i, v] for i, v in enumerate(self.textbox.get('0.0', END).split('\n')) if i >= len(oldText) or oldText[i] != v]
 
             for i in diff:
-                for i2 in self.langData.syntaxes: self.textbox.tag_remove(i2.name, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
+                for i2 in self.langData.syntaxes:
+                    self.textbox.tag_remove(i2.name, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
+                    if i2.sub_syntaxes != None:
+                        for i3 in i2.sub_syntaxes: self.textbox.tag_remove(i3.name, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
 
                 for i2 in self.langData.syntaxes:
                     matches = i2.regex.finditer(i[1])
                     for i3 in matches:
                         self.textbox.tag_configure(i2.name, foreground=i2.color)
                         self.textbox.tag_add(i2.name, f'{i[0]+1}.{i3.start()}', f'{i[0]+1}.{i3.end()}')
+                        
+                        if i2.sub_syntaxes != None:
+                            for i4 in i2.sub_syntaxes:
+                                sub_matches = i4.regex.finditer(i3.string)
+                                for i5 in sub_matches:
+                                    self.textbox.tag_configure(i4.name, foreground=i4.color)
+                                    self.textbox.tag_add(i4.name, f'{i[0]+1}.{i5.start()}', f'{i[0]+1}.{i5.end()}')
         self.root.after(10, self.updateText)
 
     def fullUpdate(self):
