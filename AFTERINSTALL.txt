@@ -1,4 +1,6 @@
 Thank you for installing PeYx2!
 
-Here's what changed in 1.3.0:
-- Added sub-syntaxes to syntax highlighting system for better highlighting
+Here's what changed in 1.4.0:
+- Sub-syntaxes can now have sub-syntaxes!
+  (and those sub-sub-syntaxes can have sub-sub-sub-syntaxes and so on)
+- Other bugfixes and improvements for the syntax highlighting system

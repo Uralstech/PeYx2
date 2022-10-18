@@ -48,7 +48,7 @@ class PeYx2:
         if num != -1 and num != 3:
             self.root.destroy()
 
-    def refreshWindow(self):
+    def restartWindow(self):
         self.root.destroy()
         del self.root
 
@@ -124,35 +124,30 @@ class PeYx2:
 
         system(self.langData.command)
 
+    def doUpdateText(self, syntaxes, text, row, column=0):
+        for i in syntaxes:
+            matches = i.regex.finditer(text)
+            for i2 in matches:
+                self.textbox.tag_configure(i.name, foreground=i.color)
+                self.textbox.tag_add(i.name, f'{row}.{i2.start()+column}', f'{row}.{i2.end()+column}')
+                
+                if i.sub_syntaxes: self.doUpdateText(i.sub_syntaxes, i2.group(), row, column+i2.start())
+    
     def updateText(self):
-        if self.oldText != self.textbox.get('0.0', END) and self.langData != None:
+        if self.oldText != self.textbox.get('0.0', END) and self.langData:
             oldText = self.oldText.split('\n')
             self.oldText = self.textbox.get('0.0', END)
             diff = [[i, v] for i, v in enumerate(self.textbox.get('0.0', END).split('\n')) if i >= len(oldText) or oldText[i] != v]
-
+            
             for i in diff:
-                for i2 in self.langData.syntaxes:
-                    self.textbox.tag_remove(i2.name, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
-                    if i2.sub_syntaxes != None:
-                        for i3 in i2.sub_syntaxes: self.textbox.tag_remove(i3.name, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
-
-                for i2 in self.langData.syntaxes:
-                    matches = i2.regex.finditer(i[1])
-                    for i3 in matches:
-                        self.textbox.tag_configure(i2.name, foreground=i2.color)
-                        self.textbox.tag_add(i2.name, f'{i[0]+1}.{i3.start()}', f'{i[0]+1}.{i3.end()}')
-                        
-                        if i2.sub_syntaxes != None:
-                            for i4 in i2.sub_syntaxes:
-                                sub_matches = i4.regex.finditer(i3.string)
-                                for i5 in sub_matches:
-                                    self.textbox.tag_configure(i4.name, foreground=i4.color)
-                                    self.textbox.tag_add(i4.name, f'{i[0]+1}.{i5.start()}', f'{i[0]+1}.{i5.end()}')
+                for i2 in self.langData.syntax_tags: self.textbox.tag_remove(i2, f'{i[0]+1}.0', f'{i[0]+1}.{len(i[1])}')
+                self.doUpdateText(self.langData.syntaxes, i[1], i[0]+1)
+                
         self.root.after(10, self.updateText)
 
     def fullUpdate(self):
         self.oldText = ''
-        self.root.after(5000, self.fullUpdate)
+        self.root.after(10000, self.fullUpdate)
 
     def checkSave(self):
         data = None
@@ -199,7 +194,7 @@ class PeYx2:
 
         if oldEditorData != self.editorData:
             self.tempText = self.textbox.get('0.0', END)[:-1]
-            self.refreshWindow()
+            self.restartWindow()
 
     def copyText(self):
         self.textbox.clipboard_clear()
@@ -219,6 +214,8 @@ class PeYx2:
             self.textbox.replace(SEL_FIRST, SEL_LAST, text)
         else:
             self.textbox.insert(self.textbox.index(INSERT), text)
+
+    def refreshHighlighting(self): self.oldText = ''
 
     def initializeGraphics(self):
         vScroll = Scrollbar(self.root, orient=VERTICAL)
@@ -263,6 +260,7 @@ class PeYx2:
 
         ide = Menu(menu, tearoff=0)
         ide.add_command(label='Run file', accelerator='F5', command=self.runFile)
+        ide.add_command(label='Refresh Highlighting', accelerator='Ctrl+R', command=self.refreshHighlighting)
         ide.add_separator()
         ide.add_command(label='List all langConfigs', command=lambda:self.langHelper.ShowLangConfigs(self.root))
 
@@ -287,6 +285,7 @@ class PeYx2:
         self.root.bind('<Control-y>', lambda _:self.textbox.edit_redo())
 
         self.root.bind('<F5>', lambda _:self.runFile())
+        self.root.bind('<Control-r>', lambda _:self.refreshHighlighting())
         self.root.bind('<F1>', lambda _:openweb('https://github.com/uralstech/peyx2/wiki', new=2))
 
         self.updateText()

@@ -90,6 +90,9 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
                         "name":"string-escape",
                         "regex":"(\\\\'|\\\\\"|\\\\{2})",
                         "color":"#ff8000"
+
+                        // NEW for v1.4.0! Sub-syntaxes can now have sub-sub-syntaxes! Check out
+                        // .test.json to see how crazy it can get!
                     }
 
                     // Note: There can be more than one sub-syntax category, even though only one is shown here

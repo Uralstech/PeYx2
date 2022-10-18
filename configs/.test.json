@@ -1,0 +1,54 @@
+{
+    "version":"1.0.0",
+    "command":"echo ___FILE___",
+    "syntaxes":
+        [
+            {
+                "name":"comment",
+                "regex":"#.*",
+                "color":"#008000"
+            },
+            {
+                "name":"string",
+                "regex":"([\"'])((\\\\{2})*|(.*?[^\\\\](\\\\{2})*))\\1",
+                "color":"#ffa264",
+
+                "sub-syntaxes":
+                [
+                    {
+                        "name":"string-escape",
+                        "regex":"(\\\\'|\\\\\"|\\\\{2})",
+                        "color":"#ff8000"
+                    },
+                    {
+                        "name":"string-special",
+                        "regex":"(Hello!)",
+                        "color":"#a80adc",
+
+                        "sub-syntaxes":
+                        [
+                            {
+                                "name":"string-special2",
+                                "regex":"l",
+                                "color":"#0080ff"
+                            },
+                            {
+                                "name":"string-special3",
+                                "regex":"o!",
+                                "color":"#b9c0ff",
+
+                                "sub-syntaxes":
+                                [
+                                    {
+                                        "name":"string-special3-2",
+                                        "regex":"!",
+                                        "color":"#8080ff"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+}

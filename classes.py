@@ -13,6 +13,7 @@ class LangSyntax:
 @dataclass
 class LangData:
     syntaxes: list[LangSyntax]
+    syntax_tags: list[str]
     command: str
 
 @dataclass

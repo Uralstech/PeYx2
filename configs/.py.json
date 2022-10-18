@@ -38,7 +38,12 @@
                     {
                         "name":"string-escape",
                         "regex":"(\\\\'|\\\\\"|\\\\t|\\\\n|\\\\f|\\\\r|\\\\u|\\\\{2})",
-                        "color":"#ff8000"
+                        "color":"#ffff80"
+                    },
+                    {
+                        "name":"string-special",
+                        "regex":"{.*?}",
+                        "color":"#80ff80"
                     }
                 ]
             }
