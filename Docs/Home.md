@@ -92,7 +92,7 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
                         "color":"#ff8000"
 
                         // NEW for v1.4.0! Sub-syntaxes can now have sub-sub-syntaxes! Check out
-                        // .test.json to see how crazy it can get!
+                        // *.test.json to see how crazy it can get!
                     }
 
                     // Note: There can be more than one sub-syntax category, even though only one is shown here
@@ -101,3 +101,4 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
         ]
 }
 ```
+[***\* .test.json***](https://github.com/Uralstech/PeYx2/blob/master/configs/.test.json)
