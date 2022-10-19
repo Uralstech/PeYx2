@@ -18,6 +18,7 @@
     - Change theme: Opens popup to change editor theme
 - **IDE menu**
     - Run: Executes command given in langConfig file for current file's type
+    - Refresh Highlighting: Refreshes syntax highlighting for current file
     - List all langConfigs: Opens popup which displays all available langConfig files
 - **Help**
     - PeYx2 wiki: Opens PeYx2 wiki page in browser
@@ -32,8 +33,9 @@
 - **Ctrl+a+s: Save-as file**
 - **Ctrl+z: Undo action**
 - **Ctrl+y: Redo action**
-- **F1: Open link to PeYx2 wiki**
 - **F5: Run *any* file with a langConfig**
+- **Ctrl+R: Refresh Syntax Highlighting**
+- **F1: Open link to PeYx2 wiki**
 
 ## Language extension guide
 ### How does a language extension work?
@@ -92,7 +94,7 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
                         "color":"#ff8000"
 
                         // NEW for v1.4.0! Sub-syntaxes can now have sub-sub-syntaxes! Check out
-                        // *.test.json to see how crazy it can get!
+                        // *.test.json in the GitHub repo to see how crazy it can get!
                     }
 
                     // Note: There can be more than one sub-syntax category, even though only one is shown here

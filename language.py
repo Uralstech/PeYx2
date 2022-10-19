@@ -52,7 +52,7 @@ class LangConfigHelper:
 
         try:
             for file in scandir(filepath):
-                if file.is_file() and splitext(file.name)[1] == '.json': files.append(file.name)
+                if file.is_file() and splitext(file.name)[1] == '.json': files.append(f'{file.name}{" "*(60-len(file.name))}{splitext(file.name)[0]} files')
         except Exception as error:
             showerror('PeYx2 langConfigs', f'An unexpected error occured!\n\n{str(error)}')
             return None

@@ -1,7 +1,7 @@
 # **PeYx2**
 
 ## **What is PeYx2?**
-**PeYx2 (pronounced like pex) is a Text Editor made with Python.**
+**PeYx2 (pronounced like pex-two) is a Text Editor made with Python.**
 It's a successor to [***PeYx***](https://github.com/Uralstech/PeYx). Here are some of it's new features:
 - **Better code highlighting! *Now for \*any filetype!***
 - **Easily changeable fonts and colors!**
@@ -15,10 +15,11 @@ Here are the shortcuts:
 - **Ctrl+a+s: Save-as file**
 - **Ctrl+z: Undo action**
 - **Ctrl+y: Redo action**
-- **F1: Open link to PeYx2 wiki (coming soon)**
-- **F5: Run *\*any* file**
+- **F5: Run *\*any* file with a langConfig**
+- **Ctrl+R: Refresh Syntax Highlighting**
+- **F1: Open link to PeYx2 wiki**
 
-\* - any filetype with a corresponding .langConfig file
+\* - any filetype with a corresponding langConfig
 
 All other instructions should be obvious in the UI
 ### NOTE: **This *should* work on MacOS and Linux, but I haven't tested it.**

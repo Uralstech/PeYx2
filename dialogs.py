@@ -7,26 +7,27 @@ from os.path import abspath, dirname, join
 class ListDialog(Dialog):
     __here = abspath(dirname(__file__))
 
-    def __init__(self, master, title, files):
-        self.files = files
+    def __init__(self, master, title, data):
+        self.data = data
         super().__init__(master, title)
 
     def body(self, master):
         master.pack(fill='both', expand=1)
         self.iconphoto(False, PhotoImage(file=abspath(join(ListDialog.__here, 'graphics/winicon.png'))))
         self.resizable(True, False)
+        self.geometry('300x230')
 
         self.list_ = Listbox(master)
-        for i, v in enumerate(self.files): self.list_.insert(i, v)
-        self.list_.pack(fill='both', expand=1, padx=5, pady=5)
+        for i, v in enumerate(self.data): self.list_.insert(i, v)
+        self.list_.pack(fill='both', expand=1, padx=5, pady=1)
 
         return master
     
     def buttonbox(self):
         box = Frame(self)
         w = Button(box, text="Close", width=10, command=self.ok, default=ACTIVE)
-        w.pack(fill='x', expand=1, padx=5, pady=5)
-        self.bind("<Return>", lambda x:self.ok())
+        w.pack(fill='x', expand=1, padx=5)
+        self.bind("<Return>", lambda _:self.ok())
         box.pack(fill='both', expand=1)
 
 class EditorSettingsDialog(Dialog):
