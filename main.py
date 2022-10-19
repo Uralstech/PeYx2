@@ -1,19 +1,24 @@
-from tkinter import *
-from copy import copy
-from tkinter.font import Font
+from tkinter import Tk, PhotoImage, Scrollbar, Text, Menu, HORIZONTAL, VERTICAL, RIGHT, BOTTOM, INSERT, SEL, SEL_FIRST, SEL_LAST, END
 from tkinter.filedialog import askopenfilename, asksaveasfilename
-from tkinter.dialog import Dialog
-from os.path import abspath, dirname, isfile, join, splitext
 from tkinter.messagebox import showerror, showwarning
-from language import LangConfigHelper
-from settings import EditorSettingsHelper
-from webbrowser import open as openweb
+from tkinter.dialog import Dialog
+from tkinter.font import Font
+
 from os import getcwd, chdir, system
-from requests import get
+from os.path import abspath, dirname, isfile, join, splitext
+from threading import Thread
 from sys import argv
 
+from settings import EditorSettingsHelper
+from language import LangConfigHelper
+
+from webbrowser import open as openweb
+from requests import get
+
+from copy import copy
+
 class PeYx2:
-    __version = '1.5.1'
+    __version = '1.5.2'
     __here = abspath(dirname(__file__))
 
     def __init__(self, filepath):
@@ -29,6 +34,7 @@ class PeYx2:
         self.tempText = ''
         self.oldText = ''
         self.checkv = True
+        self.vcThread = None
         self.initializeWindow()
 
     def showUpdateDialog(self, uv, vi):
@@ -67,13 +73,15 @@ class PeYx2:
         self.root.protocol('WM_DELETE_WINDOW', self.checkAndQuit)
 
         if self.checkv: 
-            self.checkVersion()
+            self.vcThread = Thread(target=self.checkVersion)
+            self.vcThread.start()
             self.checkv = False
         self.root.mainloop()
 
     def checkAndQuit(self):
         num = self.checkSaveDialog('PeYx2: Quit?', f'Quitting will discard all changes.')
         if num != -1 and num != 3:
+            if self.vcThread: self.vcThread.join()
             self.root.destroy()
 
     def restartWindow(self):
@@ -154,8 +162,7 @@ class PeYx2:
 
     def doUpdateText(self, syntaxes, text, row, column=0):
         for i in syntaxes:
-            matches = i.regex.finditer(text)
-            for i2 in matches:
+            for i2 in i.regex.finditer(text):
                 self.textbox.tag_configure(i.name, foreground=i.color)
                 self.textbox.tag_add(i.name, f'{row}.{i2.start()+column}', f'{row}.{i2.end()+column}')
                 
@@ -323,7 +330,7 @@ def main():
     filepath = ''
     if len(argv) > 1: filepath = argv[1]
     
-    PeYx2(filepath)
+    win = PeYx2(filepath)
 
 if __name__ == '__main__':
     main()
