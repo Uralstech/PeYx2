@@ -4,14 +4,16 @@ from tkinter.font import Font
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.dialog import Dialog
 from os.path import abspath, dirname, isfile, join, splitext
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, showwarning
 from language import LangConfigHelper
 from settings import EditorSettingsHelper
+from requests import get, ConnectionError
 from webbrowser import open as openweb
 from os import getcwd, chdir, system
 from sys import argv
 
 class PeYx2:
+    __version = '1.5.0'
     __here = abspath(dirname(__file__))
 
     def __init__(self, filepath):
@@ -26,7 +28,30 @@ class PeYx2:
 
         self.tempText = ''
         self.oldText = ''
+        self.checkv = True
         self.initializeWindow()
+
+    def showUpdateDialog(self, uv, vi):
+        dialog = Dialog(self.root, {'title': 'PeYx2: Update Found!',
+                            'text': f'There is a new update for PeYx2!\nDo you want to check it out?\n\nCurrent version: {PeYx2.__version}\nUpdate version: {uv} [{vi}]',
+                            'bitmap': 'info',
+                            'default': 0,
+                            'strings': ('GitHub',
+                                        'Cancel')})
+        if dialog.num == 0: openweb('https://github.com/Uralstech/PeYx2/tree/master/Builds')
+
+    def checkVersion(self):
+        try:
+            ov_text = get('https://pastebin.com/raw/ig1U2nkq').text.split()
+
+            ov_code = 0
+            cv_code = 0
+            for i, v in enumerate(ov_text[0].split('.')): ov_code += int(v) / (10 ** i)
+            for i, v in enumerate(PeYx2.__version.split('.')): cv_code += int(v) / (10 ** i)
+            print(ov_code, cv_code, sep='  ')
+
+            if ov_code > cv_code: self.showUpdateDialog(ov_text[0], ' '.join(ov_text[1:]))
+        except Exception as error: showwarning('PeYx2 Version Checker', f'An error occured while trying to get the latest version of PeYx2!\n\n{str(error)}')
 
     def initializeWindow(self):
         self.root = Tk()
@@ -41,6 +66,10 @@ class PeYx2:
             self.startOpen = False
 
         self.root.protocol('WM_DELETE_WINDOW', self.checkAndQuit)
+
+        if self.checkv: 
+            self.checkVersion()
+            self.checkv = False
         self.root.mainloop()
 
     def checkAndQuit(self):
