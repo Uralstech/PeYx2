@@ -53,7 +53,7 @@ You can leave the metadata class if you replace the placeholder links with actua
             // All of this must be filled out; otherwise PeYx2 will throw an error
 
             // Current version of extension
-            "version":"1.1.0",
+            "version":"1.2.3",
 
             // Link to online paste of version, for version checking; doesn't have to be pastebin.com,
             // but must be a page containing RAW TEXT in this format: '1.2.3 type/name of update update' -
