@@ -18,44 +18,53 @@ from requests import get
 from copy import copy
 
 class PeYx2:
-    __version = '1.5.2'
+    __version = '1.6.0'
     __here = abspath(dirname(__file__))
 
     def __init__(self, filepath):
-        self.filepath = filepath
-        self.startOpen = isfile(filepath)
+        self.filepath   = filepath
+        self.startOpen  = isfile(filepath)
 
-        self.langHelper = LangConfigHelper()
-        self.langData = self.langHelper.GetLangConfig(filepath)
+        self.langHelper   = LangConfigHelper()
+        self.langData     = self.langHelper.GetLangConfig(filepath)
+        self.langConfigs  = self.langHelper.GetAllLangConfigs()
 
-        self.editorHelper = EditorSettingsHelper()
-        self.editorData = self.editorHelper.GetEditorSettings()
+        self.editorHelper  = EditorSettingsHelper()
+        self.editorData    = self.editorHelper.GetEditorSettings()
 
-        self.tempText = ''
-        self.oldText = ''
-        self.checkv = True
-        self.vcThread = None
+        self.tempText  = ''
+        self.oldText   = ''
+        self.checkv    = True
+        self.vcThread  = None
+
         self.initializeWindow()
 
-    def showUpdateDialog(self, uv, vi):
+    def showUpdateDialog(self, uv, vi, upi, dlp):
         dialog = Dialog(self.root, {'title': 'PeYx2: Update Found!',
-                            'text': f'There is a new update for PeYx2!\nDo you want to check it out?\n\nCurrent version: {PeYx2.__version}\nUpdate version: {uv} [{vi}]',
+                            'text': f'There is a new update for {upi}!\nDo you want to check it out?\n\nCurrent version: {PeYx2.__version}\nUpdate version: {uv} [{vi}]',
                             'bitmap': 'info',
                             'default': 0,
-                            'strings': ('GitHub',
+                            'strings': ('Update',
                                         'Cancel')})
-        if dialog.num == 0: openweb('https://github.com/Uralstech/PeYx2/tree/master/Builds')
+        if dialog.num == 0: openweb(dlp)
+
+    def doCheckVersion(self, link, cversion, updateItem, downloadPage):
+        ov_text = get(link).text.split()
+
+        ov_code = 0
+        cv_code = 0
+        for i, v in enumerate(ov_text[0].split('.')): ov_code += int(v) / (10 ** i)
+        for i, v in enumerate(cversion.split('.')): cv_code += int(v) / (10 ** i)
+
+        if ov_code > cv_code: self.showUpdateDialog(ov_text[0], ' '.join(ov_text[1:]), updateItem, downloadPage)
 
     def checkVersion(self):
         try:
-            ov_text = get('https://pastebin.com/raw/ig1U2nkq').text.split()
+            self.doCheckVersion('https://pastebin.com/raw/ig1U2nkq', PeYx2.__version, 'PeYx2', 'https://github.com/Uralstech/PeYx2/tree/master/Builds')
 
-            ov_code = 0
-            cv_code = 0
-            for i, v in enumerate(ov_text[0].split('.')): ov_code += int(v) / (10 ** i)
-            for i, v in enumerate(PeYx2.__version.split('.')): cv_code += int(v) / (10 ** i)
-
-            if ov_code > cv_code: self.showUpdateDialog(ov_text[0], ' '.join(ov_text[1:]))
+            if self.langConfigs:
+                for i in self.langConfigs:
+                    if i.metadata: self.doCheckVersion(i.metadata.online, i.metadata.version, f'{i.filename} (extension)', i.metadata.download)
         except Exception as error: showwarning('PeYx2 Version Checker', f'An error occured while trying to get the latest version of PeYx2!\n\n{str(error)}')
 
     def initializeWindow(self):
@@ -180,10 +189,6 @@ class PeYx2:
                 
         self.root.after(10, self.updateText)
 
-    def fullUpdate(self):
-        self.oldText = ''
-        self.root.after(10000, self.fullUpdate)
-
     def checkSave(self):
         data = None
         if isfile(self.filepath):
@@ -297,7 +302,7 @@ class PeYx2:
         ide.add_command(label='Run file', accelerator='F5', command=self.runFile)
         ide.add_command(label='Refresh Highlighting', accelerator='Ctrl+R', command=self.refreshHighlighting)
         ide.add_separator()
-        ide.add_command(label='List all langConfigs', command=lambda:self.langHelper.ShowLangConfigs(self.root))
+        ide.add_command(label='List all langConfigs', command=lambda:self.langHelper.ShowLangConfigs(self.root, self.langConfigs))
 
         menu.add_cascade(label='IDE', menu=ide)
 
@@ -324,7 +329,6 @@ class PeYx2:
         self.root.bind('<F1>', lambda _:openweb('https://github.com/uralstech/peyx2/wiki', new=2))
 
         self.updateText()
-        self.fullUpdate()
 
 def main():
     filepath = ''

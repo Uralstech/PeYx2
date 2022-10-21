@@ -15,11 +15,12 @@ class ListDialog(Dialog):
         master.pack(fill='both', expand=1)
         self.iconphoto(False, PhotoImage(file=abspath(join(ListDialog.__here, 'graphics/winicon.png'))))
         self.resizable(True, False)
-        self.geometry('300x230')
+        self.minsize(700,450)
 
-        self.list_ = Listbox(master)
-        for i, v in enumerate(self.data): self.list_.insert(i, v)
-        self.list_.pack(fill='both', expand=1, padx=5, pady=1)
+        self.list_ = Text(master, width=1)
+        self.list_.insert(END, '\n'.join(self.data))
+        self.list_.pack(fill='x', expand=1, padx=5, pady=5)
+        self.list_.config(state='disabled')
 
         return master
     
