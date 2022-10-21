@@ -43,10 +43,11 @@ A language extension for PeYx2 (>1.1.0) is a JSON file with the command to execu
 Each extension's name is the file extension of the language it is for (eg: Python = .py.json, ezr = .ezr.json, C = .c.json) - But this may change in the future.
 All extension JSONs must be stored under the 'configs' folder, which can be found where PeYx2 is installed.
 
-Here's the structure of the JSON file; Remove the comments and try it yourself!
+Here's the structure of the JSON file; Remove the comments and 'metadata' class and try it yourself!
+You can leave the metadata class if you replace the placeholder links with actual links
 ```
 {
-    // NEW for v1.6.0! The metadata class
+    // NEW for v1.6.0! The OPTIONAL metadata class
     "metadata":
         {
             // All of this must be filled out; otherwise PeYx2 will throw an error
@@ -54,10 +55,10 @@ Here's the structure of the JSON file; Remove the comments and try it yourself!
             // Current version of extension
             "version":"1.1.0",
 
-            // Link to online paste of version, for version checking, doesn't have to be pastebin.com,
+            // Link to online paste of version, for version checking; doesn't have to be pastebin.com,
             // but must be a page containing RAW TEXT in this format: '1.2.3 type/name of update update' -
-            // version code can be as long as you want, but should only be numbers and dots; Anything after
-            // the first 'space' character is the update type or name, like 'feature update', 'optimization update', etc
+            // version code can be as long as you want, but should only be numbers and dots; anything after
+            // the first 'space' character is considered the update type or name, like 'feature update'
             "web-version":"https://pastebin.com/raw/nonexistantpage",
 
             // Link to download page, can be any
