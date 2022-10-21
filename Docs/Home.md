@@ -46,9 +46,29 @@ All extension JSONs must be stored under the 'configs' folder, which can be foun
 Here's the structure of the JSON file; Remove the comments and try it yourself!
 ```
 {
-    // Version of JSON file
-    // It isn't used anywhere now, but that may change in the future
-    "version":"1.0.0",
+    // NEW for v1.6.0! The metadata class
+    "metadata":
+        {
+            // All of this must be filled out; otherwise PeYx2 will throw an error
+
+            // Current version of extension
+            "version":"1.1.0",
+
+            // Link to online paste of version, for version checking, doesn't have to be pastebin.com,
+            // but must be a page containing RAW TEXT in this format: '1.2.3 type/name of update update' -
+            // version code can be as long as you want, but should only be numbers and dots; Anything after
+            // the first 'space' character is the update type or name, like 'feature update', 'optimization update', etc
+            "web-version":"https://pastebin.com/raw/nonexistantpage",
+
+            // Link to download page, can be any
+            "download":"https://github.com/nonexistantuser/nonexistantproject",
+
+            // Name of author
+            "author":"Nonexistant Person",
+
+            // Language the extension is for
+            "language":"nonexistant language"
+        },
 
     // Command to execute when 'Run' is called by user
     // When run, PeYx2 replaces ___FILE___ with the path to the current open file and
