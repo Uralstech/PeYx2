@@ -1,7 +1,6 @@
 Thank you for installing PeYx2!
 
-Here's what changed in 1.6.0:
-- New version checking system for extensions!
-- Better discriptions shown for extensions in 'List all langConfigs' option
-  (if metadata included in extension file)
-- Removed automatic full-syntax-refresh
+Here's what changed in 1.6.1:
+- Files now open in UTF-8 mode
+- Small change in version checking in the "doCheckVersion" function
+- Updated documentation

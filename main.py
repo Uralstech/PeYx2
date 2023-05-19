@@ -1,6 +1,6 @@
 from tkinter import Tk, PhotoImage, Scrollbar, Text, Menu, HORIZONTAL, VERTICAL, RIGHT, BOTTOM, INSERT, SEL, SEL_FIRST, SEL_LAST, END
 from tkinter.filedialog import askopenfilename, asksaveasfilename
-from tkinter.messagebox import showerror, showwarning
+from tkinter.messagebox import showerror, showwarning, askyesno
 from tkinter.dialog import Dialog
 from tkinter.font import Font
 
@@ -18,7 +18,7 @@ from requests import get
 from copy import copy
 
 class PeYx2:
-    __version = '1.6.0'
+    __version = '1.6.1'
     __here = abspath(dirname(__file__))
 
     def __init__(self, filepath):
@@ -39,15 +39,6 @@ class PeYx2:
 
         self.initializeWindow()
 
-    def showUpdateDialog(self, uv, vi, upi, dlp):
-        dialog = Dialog(self.root, {'title': 'PeYx2: Update Found!',
-                            'text': f'There is a new update for {upi}!\nDo you want to check it out?\n\nCurrent version: {PeYx2.__version}\nUpdate version: {uv} [{vi}]',
-                            'bitmap': 'info',
-                            'default': 0,
-                            'strings': ('Update',
-                                        'Cancel')})
-        if dialog.num == 0: openweb(dlp)
-
     def doCheckVersion(self, link, cversion, updateItem, downloadPage):
         ov_text = get(link).text.split()
 
@@ -56,11 +47,12 @@ class PeYx2:
         for i, v in enumerate(ov_text[0].split('.')): ov_code += int(v) / (10 ** i)
         for i, v in enumerate(cversion.split('.')): cv_code += int(v) / (10 ** i)
 
-        if ov_code > cv_code: self.showUpdateDialog(ov_text[0], ' '.join(ov_text[1:]), updateItem, downloadPage)
+        if ov_code > cv_code:
+            if askyesno('PeYx2: Update Found!', f'There is a new update for {updateItem}!\nDo you want to check it out?\n\nCurrent version: {PeYx2.__version}\nUpdate version: {ov_text[0]} [{" ".join(ov_text[1:])}]'): openweb(downloadPage)
 
     def checkVersion(self):
         try:
-            self.doCheckVersion('https://pastebin.com/raw/ig1U2nkq', PeYx2.__version, 'PeYx2', 'https://github.com/Uralstech/PeYx2/tree/master/Builds')
+            self.doCheckVersion('https://pastebin.com/raw/ig1U2nkq', PeYx2.__version, 'PeYx2', 'https://github.com/Uralstech/PeYx2/releases')
 
             if self.langConfigs:
                 for i in self.langConfigs:
@@ -112,7 +104,7 @@ class PeYx2:
             self.root.title(f'PeYx2 - {self.filepath}')
 
             try:
-                with open(self.filepath, 'r') as f:
+                with open(self.filepath, 'r', encoding='UTF-8') as f:
                     self.textbox.delete('0.0', END)
                     self.textbox.insert('0.0', f.read())
                 self.langData = self.langHelper.GetLangConfig(self.filepath)
@@ -138,7 +130,7 @@ class PeYx2:
         self.root.title(f'PeYx2 - {self.filepath}')
 
         try:
-            with open(self.filepath, 'w') as f:
+            with open(self.filepath, 'w', encoding='UTF-8') as f:
                 f.write(self.textbox.get('0.0',END)[:-1])
             self.openFile(filepath=self.filepath)
             self.langData = self.langHelper.GetLangConfig(self.filepath)
@@ -193,7 +185,7 @@ class PeYx2:
         data = None
         if isfile(self.filepath):
             try:
-                with open(self.filepath, 'r') as f:
+                with open(self.filepath, 'r', encoding='UTF-8') as f:
                     data = f.read()
             except Exception as error:
                 showerror('PeYx2 File Save Checker', f'An unexpected error occured!\n\n{str(error)}')

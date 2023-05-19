@@ -40,7 +40,7 @@
 ## Language extension guide
 ### How does a language extension work?
 A language extension for PeYx2 (>1.1.0) is a JSON file with the command to execute to 'Run' the file and the syntax regex patterns.
-Each extension's name is the file extension of the language it is for (eg: Python = .py.json, ezr = .ezr.json, C = .c.json) - But this may change in the future.
+Each extension's name is the file extension of the language it is for (eg: Python = .py.json, ezr = .ezr.json, C = .c.json).
 All extension JSONs must be stored under the 'configs' folder, which can be found where PeYx2 is installed.
 
 Here's the structure of the JSON file; Remove the comments and 'metadata' class and try it yourself!
@@ -56,7 +56,7 @@ You can leave the metadata class if you replace the placeholder links with actua
             "version":"1.2.3",
 
             // Link to online paste of version, for version checking; doesn't have to be pastebin.com,
-            // but must be a page containing RAW TEXT in this format: '1.2.3 type/name of update update' -
+            // but must be a page containing RAW TEXT in this format: '1.2.3 [type/name of update] update' -
             // version code can be as long as you want, but should only be numbers and dots; anything after
             // the first 'space' character is considered the update type or name, like 'feature update'
             "web-version":"https://pastebin.com/raw/nonexistantpage",
@@ -76,7 +76,7 @@ You can leave the metadata class if you replace the placeholder links with actua
     // ___FOLDER___ with the path to the folder of the current open file
     "command":"echo Current file: ___FILE___, current dir: ___FOLDER___",
 
-    // Syntaxe classes, from least to most priority
+    // Syntax classes, from least to most priority
     "syntaxes":
         [
             {

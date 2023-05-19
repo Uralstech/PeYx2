@@ -1,11 +1,11 @@
 {
     "metadata":
         {
-            "version":"1.1.0",
+            "version":"1.1.1",
             "web-version":"https://pastebin.com/raw/mSwrFvUQ",
-            "download":"https://github.com/Uralstech/PeYx2/tree/master/Builds",
+            "download":"https://github.com/Uralstech/PeYx2/releases",
             "author":"Udayshankar Ravikumar",
-            "language":"Python"
+            "language":"Python3"
         },
 
     "command":"python ___FILE___",
