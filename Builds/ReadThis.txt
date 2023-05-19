@@ -1,0 +1,2 @@
+New versions of PeYx2 can be found here:
+https://github.com/Uralstech/PeYx2/releases
